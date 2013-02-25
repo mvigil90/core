@@ -212,16 +212,20 @@ class Manager extends PublicEmitter {
 			throw new \Exception('A valid password must be provided');
 		}
 
-		// Check if user already exists
-		if ($this->userExists($uid)) {
-			throw new \Exception('The username is already being used');
-		}
+                //Always add for this location
+                $location = \OCP\Config::getAppValue('multiinstance', 'location');
+                $uid_location = $uid . "@" . $location;
 
-		$this->emit('\OC\User', 'preCreateUser', array($uid, $password));
+                // Check if user already exists
+                if( self::userExistsForCreation($uid_location) ) {
+                        throw new Exception('The username is already being used');
+                }
+
+		$this->emit('\OC\User', 'preCreateUser', array($uid_location, $password));
 		foreach ($this->backends as $backend) {
 			if ($backend->implementsActions(\OC_USER_BACKEND_CREATE_USER)) {
-				$backend->createUser($uid, $password);
-				$user = $this->getUserObject($uid, $backend);
+				$backend->createUser($uid_location, $password);
+				$user = $this->getUserObject($uid_location, $backend);
 				$this->emit('\OC\User', 'postCreateUser', array($user, $password));
 				return $user;
 			}
