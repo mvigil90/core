@@ -373,7 +373,7 @@ $(document).ready(function () {
 					OC.dialogs.alert(result.data.message,
 						t('settings', 'Error creating user'));
 				} else {
-					UserList.add(username, username, result.data.groups, null, 'default', true);
+					UserList.add(result.data.username, result.data.username, result.data.groups, null, 'default', true);
 				}
 			}
 		);

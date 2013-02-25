@@ -28,6 +28,7 @@ $password = $_POST["password"];
 
 // Return Success story
 try {
+	//Pass username without location to check for errors easily
 	if (!OC_User::createUser($username, $password)) {
 		OC_JSON::error(array('data' => array( 'message' => 'User creation failed for '.$username )));
 		exit();
@@ -38,9 +39,11 @@ try {
 		}
 		OC_Group::addToGroup( $username, $i );
 	}
+	$location = \OCP\Config::getAppValue('multiinstance', 'location'); 
+	$username_location = $username . "@" . $location;
 	OC_JSON::success(array("data" =>
 				array(
-					"username" => $username,
+					"username" => $username_location,
 					"groups" => implode( ", ", OC_Group::getUserGroups( $username )))));
 } catch (Exception $exception) {
 	OC_JSON::error(array("data" => array( "message" => $exception->getMessage())));
