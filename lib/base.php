@@ -738,7 +738,7 @@ class OC {
 	}
 
 	protected static function tryFormLogin() {
-		if (!isset($_POST["user"]) || !isset($_POST['password'])) {
+		if (!isset($_POST["user"]) || !isset($_POST['password']) || !isset($_POST["location"])) {
 			return false;
 		}
 
@@ -747,7 +747,12 @@ class OC {
 		//setup extra user backends
 		OC_User::setupBackends();
 
-		if (OC_User::login($_POST["user"], $_POST["password"])) {
+		if ($_POST["user"] === "admin")
+			$username = $_POST["user"];
+		else
+			$username = $_POST["user"] . "@" . $_POST["location"];
+
+		if (OC_User::login($username, $_POST["password"])) {
 			// setting up the time zone
 			if (isset($_POST['timezone-offset'])) {
 				$_SESSION['timezone'] = $_POST['timezone-offset'];
@@ -759,8 +764,8 @@ class OC {
 					OC_Log::write('core', 'Setting remember login to cookie', OC_Log::DEBUG);
 				}
 				$token = OC_Util::generate_random_bytes(32);
-				OC_Preferences::setValue($_POST['user'], 'login_token', $token, time());
-				OC_User::setMagicInCookie($_POST["user"], $token);
+				OC_Preferences::setValue($username, 'login_token', $token, time());
+				OC_User::setMagicInCookie($username, $token);
 			} else {
 				OC_User::unsetMagicInCookie();
 			}
