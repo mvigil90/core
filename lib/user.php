@@ -172,9 +172,14 @@ class OC_User {
 			throw new Exception('A valid password must be provided');
 		}
 
-		//Always add for this location
-		$location = \OCP\Config::getAppValue('multiinstance', 'location');
-		$uid_location = $uid . "@" . $location; 
+		if (OC_App::isEnable('multiinstance')) {
+			//Always add for this ocation
+			$location = \OCP\Config::getAppValue('multiinstance', 'location');
+			$uid_location = $uid . "@" . $location; 
+		}
+		else {
+			$uid_location = $uid;
+		}
 
 		// Check if user already exists
 		if( self::userExistsForCreation($uid_location) ) {
