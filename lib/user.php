@@ -172,7 +172,7 @@ class OC_User {
 			throw new Exception('A valid password must be provided');
 		}
 
-		if (OC_App::isEnable('multiinstance')) {
+		if (OC_App::isEnabled('multiinstance')) {
 			//Always add for this ocation
 			$location = \OCP\Config::getAppValue('multiinstance', 'location');
 			$uid_location = $uid . "@" . $location; 
