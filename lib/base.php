@@ -789,7 +789,7 @@ class OC {
 		//setup extra user backends
 		OC_User::setupBackends();
 
-		if ($_POST["user"] === "admin")
+		if ($_POST["user"] === "admin" || !OC_App::isEnabled('multiinstance'))
 			$username = $_POST["user"];
 		else
 			$username = $_POST["user"] . "@" . $_POST["location"];
