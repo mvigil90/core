@@ -40,7 +40,7 @@ try {
 		OC_Group::addToGroup( $username, $i );
 	}
 	if (OC_App::isEnabled('multiinstance')) {
-		if (\OCA\MultiInstance\Lib\MILocation::uidContainsLocation($username)){
+		if (\OCA\MultiInstance\Lib\MILocation::uidContainsThisLocation($username)){ //You can only add for your own location
 			$username_location = $username;
 		}
 		else { //Always add for this location 	
