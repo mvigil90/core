@@ -213,9 +213,13 @@ class Manager extends PublicEmitter {
 		}
 
 		if (OC_App::isEnabled('multiinstance')) {
-                        //Always add for this ocation
-                        $location = \OCP\Config::getAppValue('multiinstance', 'location');
-                        $uid_location = $uid . "@" . $location;
+			if (\OCA\MultiInstance\Lib\MILocation::uidContainsLocation($uid)){
+				$uid_location = $uid;
+			}
+			else { //Always add for this location 
+				$location = \OCP\Config::getAppValue('multiinstance', 'location');
+				$uid_location = $uid . "@" . $location; 
+			}
                 }
                 else {
                         $uid_location = $uid;
