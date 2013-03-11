@@ -328,7 +328,7 @@ class OC_Util {
 		$parameters['alt_login'] = OC_App::getAlternativeLogIns();
 		if (OC_App::isEnabled('multiinstance')) {
 			$parameters['default_location'] = \OCP\Config::getAppValue('multiinstance', 'location'); 
-			$parameters['locations'] = \OCA\MultiInstance\Lib\Location::getLocations();
+			$parameters['locations'] = \OCA\MultiInstance\Lib\MILocation::getLocations();
 		}
 		else {
 			$parameters['default_location'] = null;
