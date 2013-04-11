@@ -207,6 +207,19 @@ class Share {
 	* @return bool|string Returns true on success or false on failure, Returns token on success for links
 	*/
 	public static function shareItem($itemType, $itemSource, $shareType, $shareWith, $permissions) {
+		if (\OC_App::isEnabled('friends')) {
+			if ($permissions & PERMISSION_DELETE) {
+				$message = 'Sharing '.$itemSource.' failed, because the permission "delete" is not allowed with the Friends app enabled.';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
+			if ($permissions & PERMISSION_UPDATE) {
+				$message = 'Sharing '.$itemSource.' failed, because the permission "delete" is not allowed with the Friends app enabled.';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
+		}
+
 		$uidOwner = \OC_User::getUser();
 		$sharingPolicy = \OC_Appconfig::getValue('core', 'shareapi_share_policy', 'global');
 		// Verify share type and sharing conditions are met
@@ -218,6 +231,11 @@ class Share {
 			}
 			if (!\OC_User::userExists($shareWith)) {
 				$message = 'Sharing '.$itemSource.' failed, because the user '.$shareWith.' does not exist';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
+			if (\OC_App::isEnabled('friends') && !\OCA\Friends\Lib\Friends::areFriends($uidOwner, $shareWith)) {
+				$message = 'Sharing '.$itemSource.' failed, because the user '.$shareWith.' is not friends with the item owner';
 				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
 				throw new \Exception($message);
 			}
@@ -243,6 +261,11 @@ class Share {
 				}
 			}
 		} else if ($shareType === self::SHARE_TYPE_GROUP) {
+			if (\OC_App::isEnabled('friends')) {
+				$message = 'Sharing '.$itemSource.' failed, because group sharing is not allowed when the Friends app is enabled.';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
 			if (!\OC_Group::groupExists($shareWith)) {
 				$message = 'Sharing '.$itemSource.' failed, because the group '.$shareWith.' does not exist';
 				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
@@ -461,6 +484,18 @@ class Share {
 	* @return Returns true on success or false on failure
 	*/
 	public static function setPermissions($itemType, $itemSource, $shareType, $shareWith, $permissions) {
+		if (\OC_App::isEnabled('friends')) {
+			if ($permissions & PERMISSION_DELETE) {
+				$message = 'Sharing '.$itemSource.' failed, because the permission "delete" is not allowed with the Friends app enabled.';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
+			if ($permissions & PERMISSION_UPDATE) {
+				$message = 'Sharing '.$itemSource.' failed, because the permission "delete" is not allowed with the Friends app enabled.';
+				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+				throw new \Exception($message);
+			}
+		}
 		if ($item = self::getItems($itemType, $itemSource, $shareType, $shareWith,
 			\OC_User::getUser(), self::FORMAT_NONE, null, 1, false)) {
 			// Check if this item is a reshare and verify that the permissions

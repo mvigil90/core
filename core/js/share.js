@@ -316,6 +316,7 @@ OC.Share={
 			}else{
 				html += shareWithDisplayName;
 			}
+/* Removing because we do not want users to be able to edit 
 			if (possiblePermissions & OC.PERMISSION_CREATE || possiblePermissions & OC.PERMISSION_UPDATE || possiblePermissions & OC.PERMISSION_DELETE) {
 				if (editChecked == '') {
 					html += '<label style="display:none;">';
@@ -324,17 +325,20 @@ OC.Share={
 				}
 				html += '<input type="checkbox" name="edit" class="permissions" '+editChecked+' />'+t('core', 'can edit')+'</label>';
 			}
+*/
 			html += '<a href="#" class="showCruds" style="display:none;"><img class="svg" alt="'+t('core', 'access control')+'" src="'+OC.imagePath('core', 'actions/triangle-s')+'"/></a>';
 			html += '<div class="cruds" style="display:none;">';
 				if (possiblePermissions & OC.PERMISSION_CREATE) {
 					html += '<label><input type="checkbox" name="create" class="permissions" '+createChecked+' data-permissions="'+OC.PERMISSION_CREATE+'" />'+t('core', 'create')+'</label>';
 				}
+/* Removing because we do not want users to be able to edit
 				if (possiblePermissions & OC.PERMISSION_UPDATE) {
 					html += '<label><input type="checkbox" name="update" class="permissions" '+updateChecked+' data-permissions="'+OC.PERMISSION_UPDATE+'" />'+t('core', 'update')+'</label>';
 				}
 				if (possiblePermissions & OC.PERMISSION_DELETE) {
 					html += '<label><input type="checkbox" name="delete" class="permissions" '+deleteChecked+' data-permissions="'+OC.PERMISSION_DELETE+'" />'+t('core', 'delete')+'</label>';
 				}
+*/
 				if (possiblePermissions & OC.PERMISSION_SHARE) {
 					html += '<label><input type="checkbox" name="share" class="permissions" '+shareChecked+' data-permissions="'+OC.PERMISSION_SHARE+'" />'+t('core', 'share')+'</label>';
 				}
