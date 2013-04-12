@@ -789,10 +789,9 @@ class OC {
 		//setup extra user backends
 		OC_User::setupBackends();
 
-		if ($_POST["user"] === "admin" || !OC_App::isEnabled('multiinstance'))
-			$username = $_POST["user"];
-		else
+		if (OC_App::isEnabled('multiinstance')) {
 			$username = $_POST["user"] . "@" . $_POST["location"];
+		}
 
 		if (OC_User::login($username, $_POST["password"])) {
 			// setting up the time zone
