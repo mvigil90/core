@@ -13,10 +13,12 @@
 		</div>
 		<?php endif; ?>
 		<?php if (isset($_['invalidpassword']) && ($_['invalidpassword'])): ?>
+			<?php if ($_['locations'] !== null AND $_['default_location'] !== null) : ?>
 			<div class="notifications">
 				<?php echo "If you have never accessed your account from this city, or if you changed your account information in another city since the last time you logged in from this city, please wait 20 minutes and try again."; ?>
 			</div>
-		<?php endif; ?>
+			<?php endif; #location ?>
+		<?php endif; # lost password ?>
 		<p class="infield grouptop">
 			<input type="text" name="user" id="user" placeholder=""
 				   value="<?php p($_['username']); ?>"<?php p($_['user_autofocus'] ? ' autofocus' : ''); ?>
