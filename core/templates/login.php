@@ -18,11 +18,13 @@
 				<li class="errors">
 					<?php echo $l->t('Lost your password?'); ?>
 				</li>
+			</a>
+			<?php if ($_['locations'] !== null AND $_['default_location'] !== null) : ?>
 				<li class="notifications">
 					<?php echo "If you have never accessed your account from this city, or if you changed your account information in another city since the last time you logged in from this city, please wait 20 minutes and try again."; ?>
 				</li>
-			</a>
-			<?php endif; ?>
+			<?php endif; #location ?>
+			<?php endif; # lost password ?>
 		</ul>
 		<p class="infield grouptop">
 			<input type="text" name="user" id="user"
