@@ -6,11 +6,16 @@
 	} ?>
 		<?php if (isset($_['invalidcookie']) && ($_['invalidcookie'])): ?>
 		<div class="warning">
-			<?php p($l->t('Automatic logon rejected!')); ?><br>
-			<small><?php p($l->t('If you did not change your password recently, your account may be compromised!')); ?></small>
+			<?php echo $l->t('Automatic logon rejected!'); ?><br>
+			<small><?php echo $l->t('If you did not change your password recently, your account may be compromised!'); ?></small>
 			<br>
-			<small><?php p($l->t('Please change your password to secure your account again.')); ?></small>
+			<small><?php echo $l->t('Please change your password to secure your account again.'); ?></small>
 		</div>
+		<?php endif; ?>
+		<?php if (isset($_['invalidpassword']) && ($_['invalidpassword'])): ?>
+			<div class="notifications">
+				<?php echo "If you have never accessed your account from this city, or if you changed your account information in another city since the last time you logged in from this city, please wait 20 minutes and try again."; ?>
+			</div>
 		<?php endif; ?>
 		<p class="infield grouptop">
 			<input type="text" name="user" id="user" placeholder=""

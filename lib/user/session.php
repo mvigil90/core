@@ -122,13 +122,19 @@ class Session implements Emitter {
 	public function login($uid, $password) {
 		$this->manager->emit('\OC\User', 'preLogin', array($uid, $password));
 		$user = $this->manager->get($uid);
+                if (OC_App::isEnabled('multiinstance') && !$user) {
+                        \OCA\MultiInstance\Lib\MILocation::fetchUserFromCentralServer($uid);
+                }
 		if ($user) {
-			$result = $user->checkPassword($password);
+			$result = $user->checkPassword($password);		
 			if ($result and $user->isEnabled()) {
 				$this->setUser($user);
 				$this->manager->emit('\OC\User', 'postLogin', array($user, $password));
 				return true;
 			} else {
+				if (OC_App::isEnabled('multiinstance')) {
+					\OCA\MultiInstance\Lib\MILocation::fetchUserFromCentralServer($uid);
+				}
 				return false;
 			}
 		} else {
