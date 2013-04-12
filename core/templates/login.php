@@ -18,6 +18,9 @@
 				<li class="errors">
 					<?php echo $l->t('Lost your password?'); ?>
 				</li>
+				<li class="notifications">
+					<?php echo "If you have never accessed your account from this city, or if you changed your account information in another city since the last time you logged in from this city, please wait 20 minutes and try again."; ?>
+				</li>
 			</a>
 			<?php endif; ?>
 		</ul>

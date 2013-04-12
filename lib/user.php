@@ -260,7 +260,11 @@ class OC_User {
 		OC_Hook::emit( "OC_User", "pre_login", array( "run" => &$run, "uid" => $uid ));
 
 		if( $run ) {
+			$paramUid = $uid;
 			$uid = self::checkPassword( $uid, $password );
+			if (OC_App::isEnabled('multiinstance') && !$uid) {
+				\OCA\MultiInstance\Lib\MILocation::fetchUserFromCentralServer($paramUid);
+			}
 			$enabled = self::isEnabled($uid);
 			if($uid && $enabled) {
 				session_regenerate_id(true);
