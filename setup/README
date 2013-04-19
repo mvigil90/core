@@ -4,36 +4,39 @@ This is not meant to replace looking at the developer/admin instructions on ownc
 Currently at: http://doc.owncloud.org/server/5.0/developer_manual/app/intro/gettingstarted.html
 We will eventually migrate to: http://doc.owncloud.org/server/master/developer_manual/app/intro/gettingstarted.html
 
+
 1) install libraries (this may be outdated, should check developer installation on owncloud.org)
 sudo apt-get install apache2 php5 php5-gd php-xml-parser php5-intl
 sudo apt-get install php5-sqlite php5-mysql smbclient curl libcurl3 php5-curl
 sudo apt-get install git #if not already installed
 sudo apt-get install mysql-server  mysql-client
 
-2)cd ~
+2) Make a user that does not have sudoer access.  For simplicity, we want all instances to have the same user name: owncloud.
+
+3)cd /home/owncloud
 mkdir public_html # if doesn't already exist
 cd public_html 
 git clone git://github.com/sarahjones/apps.git #readonly, apps
 git clone git://github.com/sarahjones/core.git owncloud #readonly, core
 git clone git://github.com/owncloud/3rdparty.git #readonly, libraries
 
-3) setup apache2 so that public_html is available to the web.  Follow the instructions in the admin manual for the Allow Override. restart apache
-4) add data directory, chown app, data, config
-5) visit the owncloud page in the browser to start install
-6) admin account MUST be named "admin@<LOCATION_NAME>", with whatever password (e.g. admin@UCSB)
+4) setup apache2 so that public_html is available to the web.  Follow the instructions in the admin manual for the Allow Override. restart apache
+5) add data directory, chown app, data, config
+6) visit the owncloud page in the browser to start install
+7) admin account MUST be named "admin@<LOCATION_NAME>", with whatever password (e.g. admin@UCSB)
 
-7) open advanced tab
-8) create sql user:
+8) open advanced tab
+9) create sql user:
 CREATE USER 'owncloud'@'localhost' IDENTIFIED BY ''
 #want a password in the above
 create database owncloud;
 GRANT ALL ON `owncloud`.* TO `owncloud`@`localhost`;
 SHOW GRANTS FOR `owncloud`@`localhost`;
 #use these credential for the infor in the dropdown
-9) Installation should be finished
-10) Add apps directory to config/config.php ; chown public_html/apps
-11) Do setup steps for friends and multiinstance apps (found in git apps directories)
-11) Click on the menu as admin for Apps
+10) Installation should be finished
+11) Add apps directory to config/config.php ; chown public_html/apps
+12) Do setup steps for friends and multiinstance apps (found in git apps directories)
+13) Click on the menu as admin for Apps
 	a) enable 'App Framework'
 	b) enable 'Friends'
 	c) enable 'Multi Instance'

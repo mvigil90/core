@@ -213,8 +213,6 @@ class Cache {
 			\OC_DB::executeAudited($sql, $params);
 			if (\OC_App::isEnabled('multiinstance')) {
 				\OCA\MultiInstance\Lib\MILocation::writeFile($params, $this->storageId);
-error_log(print_r($queryParts, TRUE));
-
 			}
 
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
