@@ -211,6 +211,11 @@ class Cache {
 			$sql = 'INSERT INTO `*PREFIX*filecache` (' . implode(', ', $queryParts) . ')'
 				. ' VALUES (' . implode(', ', $valuesPlaceholder) . ')';
 			\OC_DB::executeAudited($sql, $params);
+			if (\OC_App::isEnabled('multiinstance')) {
+				\OCA\MultiInstance\Lib\MILocation::writeFile($params, $this->storageId);
+error_log(print_r($queryParts, TRUE));
+
+			}
 
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
 		}
