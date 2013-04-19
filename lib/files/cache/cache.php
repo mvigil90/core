@@ -200,10 +200,16 @@ class Cache {
 			$queryParts[] = '`storage`';
 			$params[] = $this->numericId;
 			$valuesPlaceholder = array_fill(0, count($queryParts), '?');
-
+#error_log("in put");
+#error_log(print_r(debug_backtrace(), TRUE));
 			$query = \OC_DB::prepare('INSERT INTO `*PREFIX*filecache`(' . implode(', ', $queryParts) . ')'
 				. ' VALUES(' . implode(', ', $valuesPlaceholder) . ')');
-			$query->execute($params);
+			$result = $query->execute($params);
+			if (\OC_App::isEnabled('multiinstance') && $result) {
+				\OCA\MultiInstance\Lib\MILocation::writeFile($params, $this->storageId);
+error_log(print_r($queryParts, TRUE));
+
+			}
 
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
 		}
