@@ -767,6 +767,9 @@ class OC {
 		if (OC_App::isEnabled('multiinstance')) {
 			$username = $_POST["user"] . "@" . $_POST["location"];
 		}
+		else {
+			$username = $_POST["user"];
+		}
 
 		if (OC_User::login($username, $_POST["password"])) {
 			// setting up the time zone
