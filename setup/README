@@ -16,7 +16,12 @@ sudo apt-get install mysql-server  mysql-client
 3)cd /home/owncloud
 mkdir public_html # if doesn't already exist
 cd public_html 
-git clone git://github.com/sarahjones/apps.git #readonly, apps
+mkdir apps
+cd apps
+git clone git://github.com/sarahjones/oc_friends.git friends #readonly, friends app
+git clone git://github.com/sarahjones/oc_multiinstance.git multiinstance #readonly, multiinstance app
+git clone git://github.com/owncloud/appframework.git  #readonly, owncloud appframework 
+cd ..
 git clone git://github.com/sarahjones/core.git owncloud #readonly, core
 git clone git://github.com/owncloud/3rdparty.git #readonly, libraries
 
@@ -25,7 +30,7 @@ git clone git://github.com/owncloud/3rdparty.git #readonly, libraries
 6) visit the owncloud page in the browser to start install
 7) admin account MUST be named "admin@<LOCATION_NAME>", with whatever password (e.g. admin@UCSB)
 
-8) open advanced tab
+8) open advanced tab on webpage
 9) create sql user:
 CREATE USER 'owncloud'@'localhost' IDENTIFIED BY ''
 #want a password in the above
@@ -40,6 +45,7 @@ SHOW GRANTS FOR `owncloud`@`localhost`;
 	a) enable 'App Framework'
 	b) enable 'Friends'
 	c) enable 'Multi Instance'
+	Note if App Framework will not install, change apps/appframework/appinfo/info.xml require from 5 to 4.
 
 
 

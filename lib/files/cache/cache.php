@@ -203,9 +203,24 @@ class Cache {
 			$query = \OC_DB::prepare('INSERT INTO `*PREFIX*filecache`(' . implode(', ', $queryParts) . ')'
 				. ' VALUES(' . implode(', ', $valuesPlaceholder) . ')');
 			$result = $query->execute($params);
+
 			if (\OC_App::isEnabled('multiinstance') && $result) {
-#error_log(print_r($queryParts, TRUE));
-				\OCA\MultiInstance\Lib\MILocation::writeFile($params, $this->storageId, $this->getMimetype($params[1]));
+				$subStrStorage = \OCA\MultiInstance\Lib\MILocation::removePathFromStorage($this->storageId); //data/<user>
+				if ($subStrStorage) {
+					$userstr = substr($subStrStorage, 5); //<user>	
+					$userpath = '/' . $userstr . 'files'; // /<user>/files
+					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath);
+					if ($storage) {
+						$permissions = $storage->getPermissions($params[6]);  //files/<filename>
+						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->storageId, $this->getMimetype($params[1]), $permissions);
+					}
+					else {
+						error_log("Getting storage failed for userpath {$userpath}");
+					}
+				}
+				else {
+					error_log("Could not get data/user out of storage: {$this->storageId}.  Implementation depends on it.  File not queued.");
+				}
 			}
 
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
