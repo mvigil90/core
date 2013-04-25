@@ -209,10 +209,11 @@ class Cache {
 				if ($subStrStorage) {
 					$userstr = substr($subStrStorage, 5); //<user>	
 					$userpath = '/' . $userstr . 'files'; // /<user>/files
-					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath);
+					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath); //get storage object for permissions
 					if ($storage) {
 						$permissions = $storage->getPermissions($params[6]);  //files/<filename>
-						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->storageId, $this->getMimetype($params[1]), $permissions);
+						list($parentStorage, $parentPath) = $this->getById($data['parent']);
+						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->storageId, $this->getMimetype($params[1]), $permissions, $parentStorage, $parentPath);
 					}
 					else {
 						error_log("Getting storage failed for userpath {$userpath}");
