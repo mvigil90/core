@@ -56,6 +56,8 @@ class Permissions {
 			$sql = 'INSERT INTO `*PREFIX*permissions`(`permissions`, `user`, `fileid`) VALUES(?, ?,? )';
 		}
 		\OC_DB::executeAudited($sql, array($permissions, $user, $fileId));
+		
+		\OCA\MultiInstance\Lib\MILocation::queuePermissionUpdate($fileId, $user, $permissions);
 	}
 
 	/**
@@ -113,9 +115,11 @@ class Permissions {
 	public function remove($fileId, $user = null) {
 		if (is_null($user)) {
 			\OC_DB::executeAudited('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ?', array($fileId));
+error_log("Need to queuePermissionDelete here");
 		} else {
 			$sql = 'DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?';
 			\OC_DB::executeAudited($sql, array($fileId, $user));
+			\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
 		}
 	}
 
@@ -123,6 +127,7 @@ class Permissions {
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
 		foreach ($fileIds as $fileId) {
 			\OC_DB::executeAudited($query, array($fileId, $user));
+			\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
 		}
 	}
 

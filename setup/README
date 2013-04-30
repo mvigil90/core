@@ -47,5 +47,7 @@ SHOW GRANTS FOR `owncloud`@`localhost`;
 	c) enable 'Multi Instance'
 	Note if App Framework will not install, change apps/appframework/appinfo/info.xml require from 5 to 4.
 
+Note: If you are planning on installing the multiinstance app, do not create any more users until after you go through the setup instructions for the multiinstance app.
+
 
 
