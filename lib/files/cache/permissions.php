@@ -58,6 +58,8 @@ class Permissions {
 				.' VALUES(?, ?,? )');
 		}
 		$query->execute(array($permissions, $user, $fileId));
+		
+		\OCA\MultiInstance\Lib\MILocation::queuePermissionUpdate($fileId, $user, $permissions);
 	}
 
 	/**
@@ -94,12 +96,14 @@ class Permissions {
 	public function remove($fileId, $user) {
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
 		$query->execute(array($fileId, $user));
+		\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
 	}
 
 	public function removeMultiple($fileIds, $user) {
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
 		foreach($fileIds as $fileId){
 			$query->execute(array($fileId, $user));
+			\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
 		}
 	}
 }
