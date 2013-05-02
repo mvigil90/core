@@ -215,15 +215,13 @@ class Cache {
 			\OC_DB::executeAudited($sql, $params);
 
 			if (\OC_App::isEnabled('multiinstance') && $result) {
-				$subStrStorage = \OCA\MultiInstance\Lib\MILocation::removePathFromStorage($this->fullStorageId); //data/<user>
+				$subStrStorage = \OCA\MultiInstance\Lib\MILocation::removePathFromStorage($this->fullStorageId); // /<user>/
 				if ($subStrStorage) {
-					$userstr = substr($subStrStorage, 5); //<user>	
-					$userpath = '/' . $userstr . 'files'; // /<user>/files
+					$userpath = $subStrStorage . 'files'; // /<user>/files
 					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath); //get storage object for permissions
 					if ($storage) {
-						$permissions = $storage->getPermissions($params[6]);  //files/<filename>
 						list($parentStorage, $parentPath) = $this->getById($data['parent']);
-						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->fullStorageId, $this->getMimetype($params[1]), $permissions, $parentStorage, $parentPath);
+						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->fullStorageId, $this->getMimetype($params[1]),  $parentPath);
 					}
 					else {
 						error_log("Getting storage failed for userpath {$userpath}");
