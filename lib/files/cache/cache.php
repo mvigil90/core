@@ -221,7 +221,7 @@ class Cache {
 					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath); //get storage object for permissions
 					if ($storage) {
 						list($parentStorage, $parentPath) = $this->getById($data['parent']);
-						\OCA\MultiInstance\Lib\MILocation::queueFile($params, $this->fullStorageId, $this->getMimetype($params[1]),  $parentPath);
+						\OCA\MultiInstance\Lib\Hooks::queueFile($params, $this->fullStorageId, $this->getMimetype($params[1]),  $parentPath);
 					}
 					else {
 						error_log("Getting storage failed for userpath {$userpath}");
