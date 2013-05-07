@@ -1,4 +1,4 @@
-Instructions to help with install.
+Instructions to help with install.  These instructions assume that you are installing both the friends app and the multiinstance app; if you are not installing both, ignore the instructions not related to your app.
 
 This is not meant to replace looking at the developer/admin instructions on owncloud.org.
 Currently at: http://doc.owncloud.org/server/5.0/developer_manual/app/intro/gettingstarted.html
@@ -13,9 +13,11 @@ sudo apt-get install mysql-server  mysql-client
 
 2) Make a user that does not have sudoer access.  For simplicity, we want all instances to have the same user name: owncloud.
 
-3)cd /home/owncloud
+3)  Get code:
+cd /home/owncloud
 mkdir public_html # if doesn't already exist
 cd public_html 
+git clone git://github.com/sarahjones/core.git owncloud   #download core (this code)
 mkdir apps
 cd apps
 git clone git://github.com/sarahjones/oc_friends.git friends #readonly, friends app
@@ -24,23 +26,32 @@ git clone git://github.com/owncloud/appframework.git  #readonly, owncloud appfra
 cd ..
 git clone git://github.com/sarahjones/core.git owncloud #readonly, core
 git clone git://github.com/owncloud/3rdparty.git #readonly, libraries
+TODO: this piece needs to be updated after updating the core.
 
-4) setup apache2 so that public_html is available to the web.  Follow the instructions in the admin manual for the Allow Override. restart apache
-5) add data directory, chown app, data, config
-6) visit the owncloud page in the browser to start install
-7) admin account MUST be named "admin@<LOCATION_NAME>", with whatever password (e.g. admin@UCSB)
+4) Setup apache2 so that public_html is available to the web.  Follow the instructions in the Owncloud Admin Manual for the Allow Override. Restart Apache.
+5) Execute the following in the owncloud root directory.  These instructions should mirror the Owncloud Admin Manual
+ mkdir data 
+ chown www-data:www-data apps
+ chown www-data:www-data data
+ chown www-data:www-data config
 
-8) open advanced tab on webpage
-9) create sql user:
+6) Visit the owncloud page in the browser to start install
+7) If you are using the multiinstance app, the admin account MUST be named "admin@<LOCATION_NAME>" (e.g. admin@UCSB), with whatever password 
+If you are not, it can be whatever you like
+
+8) Open advanced tab on webpage
+9) Create sql user:
 CREATE USER 'owncloud'@'localhost' IDENTIFIED BY ''
 #want a password in the above
 create database owncloud;
 GRANT ALL ON `owncloud`.* TO `owncloud`@`localhost`;
 SHOW GRANTS FOR `owncloud`@`localhost`;
-#use these credential for the infor in the dropdown
+#use these credential for the info in the dropdown
+
 10) Installation should be finished
-11) Add apps directory to config/config.php ; chown public_html/apps
-12) Do setup steps for friends and multiinstance apps (found in git apps directories)
+11) Do setup steps for friends and multiinstance apps (found in their respective code directories)
+12) Add apps directory to config/config.php.  It can be a little tricky to get right.  You know that it has been achieved successfully when you log into your admin account and from the user menu click on Apps and an app from each of your apps directories is there (apps will not be viewable unless you have created an <appdirectory>/appinfo/app.php for them, see step #11).
+You may have to change the owner of the public_html/apps directory to be www-data (similar to step #5); however, I don't think this will be necessary.
 13) Click on the menu as admin for Apps
 	a) enable 'App Framework'
 	b) enable 'Friends'
