@@ -213,10 +213,12 @@ class Cache {
 			$sql = 'INSERT INTO `*PREFIX*filecache` (' . implode(', ', $queryParts) . ')'
 				. ' VALUES (' . implode(', ', $valuesPlaceholder) . ')';
 			\OC_DB::executeAudited($sql, $params);
+			$fileid = (int)\OC_DB::insertid('*PREFIX*filecache');
 
-			if ($result) {
+			if ($fileid) {
 				list($parentStorage, $parentPath) = $this->getById($data['parent']);
 				$parameters = array( 
+					'fileid' => $fileid,
 					'fullStorage' => $this->fullStorageId,
 					'parentPath' => $parentPath,
 					'mimetype' => $this->getMimetype($params[1]),
@@ -231,7 +233,7 @@ class Cache {
 				\OCP\Util::emitHook('Cache', 'post_put', $parameters);
 			}
 
-			return (int)\OC_DB::insertid('*PREFIX*filecache');
+			return $fileid;
 		}
 	}
 
