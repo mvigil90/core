@@ -60,7 +60,12 @@ class OC_Util {
 			$user_root = OC_User::getHome($user);
 			$userdirectory = $user_root . '/files';
 			if( !is_dir( $userdirectory )) {
-				mkdir( $userdirectory, 0755, true );
+				if (\OC_App::isEnabled('multiinstance')) {
+					mkdir( $userdirectory, 0775, true ); //need the group to be able to write
+				}
+				else {
+					mkdir( $userdirectory, 0755, true );
+				}
 			}
 			//jail the user into his "home" directory
 			\OC\Files\Filesystem::init($user, $user_dir);
