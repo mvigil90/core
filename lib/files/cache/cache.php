@@ -286,6 +286,7 @@ class Cache {
 				'fileid' => (int)$id,
 				'fullStorage' => $this->fullStorageId,
 				'mimetype' => $mimetype,
+				'storedMimetype' => $currentData['mimetype'], 
 				'path' => $path, 
 				'size' => $size,
 				'mtime'	=> $mtime,
