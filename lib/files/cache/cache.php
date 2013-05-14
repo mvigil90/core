@@ -255,12 +255,48 @@ class Cache {
 			$data['name'] = $this->normalize($data['name']);
 		}
 
+		$diff = false;
+		if (\OC_App::isEnabled('multiinstance')) {
+			$currentData = $this->get((int)$id);
+
+			//Update appears to be called more than just when an update happens.  Make sure this is a real update
+			if ( (array_key_exists('size', $data) && ($currentData['size'] !== $data['size'])) ||
+				(array_key_exists('mtime', $data) && ($currentData['mtime'] !== $data['mtime'])) ||
+				(array_key_exists('etag', $data) && ($currentData['etag'] !== $data['etag']))
+			) {
+				$diff = true;
+			}
+
+			if (array_key_exists('mimepart', $data)) {
+				error_log("Unexpected key mimepart in Filecache update.  Need to update implementation to account for mimepart updates.");				
+			}
+		}
+
 		list($queryParts, $params) = $this->buildParts($data);
 		$params[] = $id;
 
 		$sql = 'UPDATE `*PREFIX*filecache` SET ' . implode(' = ?, ', $queryParts) . '=? WHERE `fileid` = ?';
 		\OC_DB::executeAudited($sql, $params);
-error_log("queueFile needed here: update");
+		if ($diff) {
+			$encrypted = array_key_exists('encrypted', $data) ? $data['encrypted'] : null;
+			$etag = array_key_exists('etag', $data) ? $data['etag'] : null;
+			$mtime = array_key_exists('mtime', $data) ? $data['mtime'] : null;
+			$size = array_key_exists('size', $data) ? $data['size'] : null;
+			$mimetype = array_key_exists('mimetype', $data) ? $data['mimetype'] : null;
+			list($storage, $path) = Cache::getById((int)$id);
+			$parameters = array( 
+				'fileid' => (int)$id,
+				'fullStorage' => $this->fullStorageId,
+				'mimetype' => $mimetype,
+				'path' => $path, 
+				'size' => $size,
+				'mtime'	=> $mtime,
+				'encrypted' => $encrypted,
+				'etag' => $etag
+			);
+			
+			\OCP\Util::emitHook('Cache', 'post_update', $parameters);
+		}
 	}
 
 	/**
