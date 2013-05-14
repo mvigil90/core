@@ -216,11 +216,9 @@ class Cache {
 			$fileid = (int)\OC_DB::insertid('*PREFIX*filecache');
 
 			if ($fileid) {
-				list($parentStorage, $parentPath) = $this->getById($data['parent']);
 				$parameters = array( 
 					'fileid' => $fileid,
 					'fullStorage' => $this->fullStorageId,
-					'parentPath' => $parentPath,
 					'mimetype' => $this->getMimetype($params[1]),
 					'path' => $params[6],
 					'name' => $params[8],
