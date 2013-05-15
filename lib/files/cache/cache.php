@@ -280,12 +280,12 @@ class Cache {
 			$etag = array_key_exists('etag', $data) ? $data['etag'] : null;
 			$mtime = array_key_exists('mtime', $data) ? $data['mtime'] : null;
 			$size = array_key_exists('size', $data) ? $data['size'] : null;
-			$mimetype = array_key_exists('mimetype', $data) ? $data['mimetype'] : null;
+			$mimetype = array_key_exists('mimetype', $data) ? $data['mimetype'] : $currentData['mimetype'];
 			list($storage, $path) = Cache::getById((int)$id);
 			$parameters = array( 
 				'fileid' => (int)$id,
 				'fullStorage' => $this->fullStorageId,
-				'mimetype' => $currentData['mimetype'], //Always need mimetype to know whether or not to copy
+				'mimetype' => $mimetype, //Always need mimetype to know whether or not to copy
 				'path' => $path, 
 				'size' => $size,
 				'mtime'	=> $mtime,
