@@ -285,8 +285,7 @@ class Cache {
 			$parameters = array( 
 				'fileid' => (int)$id,
 				'fullStorage' => $this->fullStorageId,
-				'mimetype' => $mimetype,
-				'storedMimetype' => $currentData['mimetype'], 
+				'mimetype' => $currentData['mimetype'], //Always need mimetype to know whether or not to copy
 				'path' => $path, 
 				'size' => $size,
 				'mtime'	=> $mtime,
