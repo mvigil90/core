@@ -367,8 +367,14 @@ class Cache {
 			}
 		}
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*filecache` WHERE `fileid` = ?');
-		$query->execute(array($entry['fileid']));
-error_log("need queueFile remove/delete");
+		$result = $query->execute(array($entry['fileid']));
+		if ($result) {
+			$parameters = array(
+				'fullStorage' => $this->fullStorageId,
+				'path' => $entry['path']
+			);
+			\OCP\Util::emitHook('Cache', 'post_delete', $parameters);
+		}
 	}
 
 	/**
