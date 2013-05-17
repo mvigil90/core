@@ -391,14 +391,17 @@ class Cache {
 				$this->remove($child['path']);
 			}
 		}
-<<<<<<< HEAD
 		
 		$sql = 'DELETE FROM `*PREFIX*filecache` WHERE `fileid` = ?';
 		\OC_DB::executeAudited($sql, array($entry['fileid']));
 
 		$permissionsCache = new Permissions($this->storageId);
 		$permissionsCache->remove($entry['fileid']);
-error_log("need queueFile remove/delete");
+		$parameters = array(
+			'fullStorage' => $this->fullStorageId,
+			'path' => $entry['path']
+		);
+		\OCP\Util::emitHook('Cache', 'post_delete', $parameters);
 	}
 
 	/**
