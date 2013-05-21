@@ -57,10 +57,15 @@ class Permissions {
 			$query = \OC_DB::prepare('INSERT INTO `*PREFIX*permissions`(`permissions`, `user`, `fileid`)'
 				.' VALUES(?, ?,? )');
 		}
-		$query->execute(array($permissions, $user, $fileId));
+		$result = $query->execute(array($permissions, $user, $fileId));
 		
-		if (\OC_App::isEnabled('multiinstance')) {
-			\OCA\MultiInstance\Lib\Hooks::queuePermissionUpdate($fileId, $user, $permissions);
+		if ($result) {
+			$parameters = array( 
+				'fileid' => $fileId,
+				'user' => $user,
+				'permissions' => $permissions
+			);
+			\OCP\Util::emitHook('Permissions', 'post_set', $parameters);
 		}
 	}
 
@@ -97,18 +102,28 @@ class Permissions {
 	 */
 	public function remove($fileId, $user) {
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
-		$query->execute(array($fileId, $user));
-		if (\OC_App::isEnabled('multiinstance')) {
-			\OCA\MultiInstance\Lib\Hooks::queuePermissionDelete($fileId, $user, $permissions);
+		$result = $query->execute(array($fileId, $user));
+
+		if ($result) {
+			$parameters = array( 
+				'fileid' => $fileId,
+				'user' => $user,
+			);
+			\OCP\Util::emitHook('Permissions', 'post_remove', $parameters);
 		}
 	}
 
 	public function removeMultiple($fileIds, $user) {
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
 		foreach($fileIds as $fileId){
-			$query->execute(array($fileId, $user));
-			if (\OC_App::isEnabled('multiinstance')) {
-				\OCA\MultiInstance\Lib\Hooks::queuePermissionDelete($fileId, $user, $permissions);
+			$result = $query->execute(array($fileId, $user));
+
+			if ($result) {
+				$parameters = array( 
+					'fileid' => $fileId,
+					'user' => $user,
+				);
+				\OCP\Util::emitHook('Permissions', 'post_remove', $parameters);
 			}
 		}	
 	}
