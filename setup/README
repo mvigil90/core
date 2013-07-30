@@ -56,7 +56,7 @@ Use these credential for the info in the dropdown
 
 10) Installation should be finished
 11) Do setup steps for friends and multiinstance apps (found in their respective code directories).  (You will need to execute step 12 before finishing this step)
-	12) Add apps directory to config/config.php (see http://doc.owncloud.org/server/master/developer_manual/core/configfile.html?highlight=apps#using-alternative-app-directories for instructions).  It can be a little tricky to get right.  You know that it has been achieved successfully when you log into your admin account and from the user menu click on Apps and an app from each of your apps directories is there (apps will not be viewable unless you have created an <appdirectory>/appinfo/app.php for them, see step #11).
+	12) Add apps directory to config/config.php (see http://doc.owncloud.org/server/5.0/developer_manual/core/configfile.html?highlight=app%20directory#using-alternative-app-directories for instructions).  It can be a little tricky to get right.  You know that it has been achieved successfully when you log into your admin account and from the user menu click on Apps and an app from each of your apps directories is there (apps will not be viewable unless you have created an <appdirectory>/appinfo/app.php for them, see step #11).
 
 13) Click on the menu as admin for Apps
 	a) enable 'App Framework'
