@@ -870,6 +870,13 @@
 				<notnull>true</notnull>
 				<length>255</length>
 			</field>
+			<field>
+				<name>user_status</name>
+				<type>integer</type>
+				<default>0</default>
+				<notnull>true</notnull>
+				<length>1</length>
+			</field>
 
 			<index>
 				<name>users_pKey</name>
