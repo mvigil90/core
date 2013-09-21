@@ -175,10 +175,18 @@ class OC_User {
 		if( self::userExistsForCreation($uid) ) {
 			throw new Exception('The username is already being used');
 		}
+		//Always add for this location
+		$location = \OCP\Config::getAppValue('multiinstance', 'location');
+		$uid_location = $uid . "@" . $location;
+
+                // Check if user already exists
+                if( self::userExistsForCreation($uid_location) ) {
+                        throw new Exception('The username is already being used');
+                }
 
 
 		$run = true;
-		OC_Hook::emit( "OC_User", "pre_createUser", array( "run" => &$run, "uid" => $uid, "password" => $password ));
+		OC_Hook::emit( "OC_User", "pre_createUser", array( "run" => &$run, "uid" => $location_uid, "password" => $password ));
 
 		if( $run ) {
 			//create the user in the first backend that supports creating users
@@ -186,10 +194,10 @@ class OC_User {
 				if(!$backend->implementsActions(OC_USER_BACKEND_CREATE_USER))
 					continue;
 
-				$backend->createUser($uid, $password);
-				OC_Hook::emit( "OC_User", "post_createUser", array( "uid" => $uid, "password" => $password ));
+				$backend->createUser($location_uid, $password);
+				OC_Hook::emit( "OC_User", "post_createUser", array( "uid" => $location_uid, "password" => $password ));
 
-				return self::userExists($uid);
+				return self::userExists($location_uid);
 			}
 		}
 		return false;

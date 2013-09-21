@@ -459,7 +459,7 @@ $(document).ready(function () {
 						UserList.availableGroups = $.unique($.merge(UserList.availableGroups, addedGroups));
 					}
 					if($('tr[data-uid="' + username + '"]').length === 0) {
-						UserList.add(username, username, result.data.groups, null, 'default', true);
+						UserList.add(result.data.username, result.data.username, result.data.groups, null, 'default', true);
 					}
 				}
 			}
