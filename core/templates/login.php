@@ -29,6 +29,19 @@
 			<img class="svg" src="<?php print_unescaped(image_path('', 'actions/user.svg')); ?>" alt=""/>
 		</p>
 
+		<p class="infield groupmiddle">
+			<label for="location"><?php echo $l->t('Location'); ?></label>
+			<select name="location" id="location">
+			<?php foreach ($_['locations'] as $location ) :
+				if ($location->getLocation() === $_['default_location']) : ?>
+					<option selected="true" value='<?php echo $location->getLocation(); ?>'><?php echo $location->getLocation(); ?></option>
+				<?php  else :  ?>
+					<option value='<?php echo $location->getLocation() ?>'><?php echo $location->getLocation() ?></option>
+				<?php   endif;
+			endforeach;?>
+			</select>
+		</p>
+
 		<p class="infield groupbottom">
 			<input type="password" name="password" id="password" value="" placeholder=""
 				   required<?php p($_['user_autofocus'] ? '' : ' autofocus'); ?> />

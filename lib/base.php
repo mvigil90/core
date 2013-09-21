@@ -782,7 +782,7 @@ class OC {
 	}
 
 	protected static function tryFormLogin() {
-		if (!isset($_POST["user"]) || !isset($_POST['password'])) {
+		if (!isset($_POST["user"]) || !isset($_POST['password']) || !isset($_POST["location"])) {
 			return false;
 		}
 
@@ -791,7 +791,12 @@ class OC {
 		//setup extra user backends
 		OC_User::setupBackends();
 
-		if (OC_User::login($_POST["user"], $_POST["password"])) {
+		if ($_POST["user"] === "admin")
+			$username = $_POST["user"];
+		else
+			$username = $_POST["user"] . "@" . $_POST["location"];
+
+		if (OC_User::login($username, $_POST["password"])) {
 			// setting up the time zone
 			if (isset($_POST['timezone-offset'])) {
 				$_SESSION['timezone'] = $_POST['timezone-offset'];
