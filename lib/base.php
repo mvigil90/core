@@ -782,7 +782,10 @@ class OC {
 	}
 
 	protected static function tryFormLogin() {
-		if (!isset($_POST["user"]) || !isset($_POST['password']) || !isset($_POST["location"])) {
+		if (!isset($_POST["user"]) || !isset($_POST['password'])) {
+			return false;
+		}
+		if (OC_App::isEnabled('multiinstance') && !isset($_POST["location"])) {
 			return false;
 		}
 

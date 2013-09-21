@@ -39,8 +39,13 @@ try {
 		}
 		OC_Group::addToGroup( $username, $i );
 	}
-	$location = \OCP\Config::getAppValue('multiinstance', 'location'); 
-	$username_location = $username . "@" . $location;
+	if (OC_App::isEnabled('multiinstance')) {
+		$location = \OCP\Config::getAppValue('multiinstance', 'location'); 
+		$username_location = $username . "@" . $location;
+	}
+	else {
+		$username_location = $username;
+	}
 	OC_JSON::success(array("data" =>
 				array(
 					"username" => $username_location,

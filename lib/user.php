@@ -175,9 +175,14 @@ class OC_User {
 		if( self::userExistsForCreation($uid) ) {
 			throw new Exception('The username is already being used');
 		}
-		//Always add for this location
-		$location = \OCP\Config::getAppValue('multiinstance', 'location');
-		$uid_location = $uid . "@" . $location;
+		if (OC_App::isEnabled('multiinstance')) {
+			//Always add for this location
+			$location = \OCP\Config::getAppValue('multiinstance', 'location');
+			$uid_location = $uid . "@" . $location;
+		}
+		else {
+			$uid_location = $uid;
+		}
 
                 // Check if user already exists
                 if( self::userExistsForCreation($uid_location) ) {
