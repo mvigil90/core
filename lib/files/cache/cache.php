@@ -223,6 +223,9 @@ class Cache {
 			if (\OC_DB::isError($result)) {
 				\OCP\Util::writeLog('cache', 'Insert to cache failed: ' . $result->getMessage(), \OCP\Util::ERROR);
 			}
+			else if (\OC_App::isEnabled('multiinstance')) {
+				\OCA\MultiInstance\Lib\MILocation::writeFile($params, $this->storageId);
+			}
 
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
 		}
