@@ -29,6 +29,7 @@
 			<img class="svg" src="<?php print_unescaped(image_path('', 'actions/user.svg')); ?>" alt=""/>
 		</p>
 
+		<?php if ($_['locations'] !== null AND $_['default_location'] !== null) : ?>
 		<p class="infield groupmiddle">
 			<label for="location"><?php echo $l->t('Location'); ?></label>
 			<select name="location" id="location">
@@ -41,6 +42,7 @@
 			endforeach;?>
 			</select>
 		</p>
+		<?php endif; ?>
 
 		<p class="infield groupbottom">
 			<input type="password" name="password" id="password" value="" placeholder=""
