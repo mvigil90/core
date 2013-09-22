@@ -222,12 +222,14 @@ class Cache {
 			$query = \OC_DB::prepare('INSERT INTO `*PREFIX*filecache`(' . implode(', ', $queryParts) . ')'
 				. ' VALUES(' . implode(', ', $valuesPlaceholder) . ')');
 			$result = $query->execute($params);
+			$fileid = (int)\OC_DB::insertid('*PREFIX*filecache');
 			if (\OC_DB::isError($result)) {
 				\OCP\Util::writeLog('cache', 'Insert to cache failed: ' . $result->getMessage(), \OCP\Util::ERROR);
 			}
-		 	else if ($result) {
+		 	else if ($result && $fileid) {
 				list($parentStorage, $parentPath) = $this->getById($data['parent']);
 				$parameters = array( 
+					'fileid' => $fileid,
 					'fullStorage' => $this->fullStorageId,
 					'parentPath' => $parentPath,
 					'mimetype' => $this->getMimetype($params[1]),
@@ -241,7 +243,7 @@ class Cache {
 				);
 				\OCP\Util::emitHook('Cache', 'post_put', $parameters);	
 			}
-			return (int)\OC_DB::insertid('*PREFIX*filecache');
+			return $fileid; 
 		}
 	}
 
