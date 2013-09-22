@@ -60,7 +60,7 @@ class Permissions {
 		$query->execute(array($permissions, $user, $fileId));
 
 		if (\OC_App::isEnabled('multiinstance')) {
-			\OCA\MultiInstance\Lib\MILocation::queuePermissionUpdate($fileId, $user, $permissions);
+			\OCA\MultiInstance\Lib\Hooks::queuePermissionUpdate($fileId, $user, $permissions);
 		}
 	}
 
@@ -124,7 +124,7 @@ class Permissions {
 			$query = \OC_DB::prepare('DELETE FROM `*PREFIX*permissions` WHERE `fileid` = ? AND `user` = ?');
 			$query->execute(array($fileId, $user));
 			if (\OC_App::isEnabled('multiinstance')) {
-				\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
+				\OCA\MultiInstance\Lib\Hooks::queuePermissionDelete($fileId, $user, $permissions);
 			}
 		}
 	}
@@ -134,7 +134,7 @@ class Permissions {
 		foreach ($fileIds as $fileId) {
 			$query->execute(array($fileId, $user));
 			if (\OC_App::isEnabled('multiinstance')) {
-				\OCA\MultiInstance\Lib\MILocation::queuePermissionDelete($fileId, $user, $permissions);
+				\OCA\MultiInstance\Lib\Hooks::queuePermissionDelete($fileId, $user, $permissions);
 			}
 		}
 	}
