@@ -227,11 +227,9 @@ class Cache {
 				\OCP\Util::writeLog('cache', 'Insert to cache failed: ' . $result->getMessage(), \OCP\Util::ERROR);
 			}
 		 	else if ($result && $fileid) {
-				list($parentStorage, $parentPath) = $this->getById($data['parent']);
 				$parameters = array( 
 					'fileid' => $fileid,
 					'fullStorage' => $this->fullStorageId,
-					'parentPath' => $parentPath,
 					'mimetype' => $this->getMimetype($params[1]),
 					'path' => $params[6],
 					'name' => $params[8],
