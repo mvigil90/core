@@ -225,22 +225,21 @@ class Cache {
 			if (\OC_DB::isError($result)) {
 				\OCP\Util::writeLog('cache', 'Insert to cache failed: ' . $result->getMessage(), \OCP\Util::ERROR);
 			}
-			else (\OC_App::isEnabled('multiinstance') && $result) {
-				$subStrStorage = \OCA\MultiInstance\Lib\MILocation::removePathFromStorage($this->fullStorageId); // /<user>
-				if ($subStrStorage) {
-					$userpath = $subStrStorage . 'files'; // /<user>/files
-					list($storage, $internalPath) = \OC\Files\Filesystem::resolvePath($userpath);  //get storage object for permissions
-					if ($storage) {
-						list($parentStorage, $parentPath) = $this->getById($data['parent']);
-						\OCA\MultiInstance\Lib\Hooks::queueFile($params, $this->fullStorageId, $this->getMimetype($params[1]),  $parentPath);
-					}
-					else {
-						error_log("Getting storage failed for userpath {$userpath}");
-					}
-				}
-				else {
-					error_log("Could not get data/user out of storage: {$this->storageId}.  Implementation depends on it.  File not queued.");
-        			}
+		 	else if ($result) {
+				list($parentStorage, $parentPath) = $this->getById($data['parent']);
+				$parameters = array( 
+					'fullStorage' => $this->fullStorageId,
+					'parentPath' => $parentPath,
+					'mimetype' => $this->getMimetype($params[1]),
+					'path' => $params[6],
+					'name' => $params[8],
+					'mimepart' => $params[0],
+					'size' => $params[3],
+					'mtime'  => $params[2],
+					'encrypted' => $params[9],
+					'etag' => $params[4]
+				);
+				\OCP\Util::emitHook('Cache', 'post_put', $parameters);	
 			}
 			return (int)\OC_DB::insertid('*PREFIX*filecache');
 		}
@@ -269,6 +268,7 @@ class Cache {
 		$query = \OC_DB::prepare('UPDATE `*PREFIX*filecache` SET ' . implode(' = ?, ', $queryParts) . '=?'
 			. ' WHERE `fileid` = ?');
 		$query->execute($params);
+		error_log("queueFile needed here: update");
 	}
 
 	/**
@@ -366,6 +366,7 @@ class Cache {
 
 		$permissionsCache = new Permissions($this->storageId);
 		$permissionsCache->remove($entry['fileid']);
+		error_log("need queueFile remove/delete");
 	}
 
 	/**
@@ -400,6 +401,7 @@ class Cache {
 		$query = \OC_DB::prepare('UPDATE `*PREFIX*filecache` SET `path` = ?, `path_hash` = ?, `name` = ?, `parent` =?'
 			. ' WHERE `fileid` = ?');
 		$query->execute(array($target, md5($target), basename($target), $newParentId, $sourceId));
+		error_log("need queueFile move");
 	}
 
 	/**
@@ -411,6 +413,7 @@ class Cache {
 
 		$query = \OC_DB::prepare('DELETE FROM `*PREFIX*storages` WHERE `id` = ?');
 		$query->execute(array($this->storageId));
+		error_log("need queuefile storage delete");
 	}
 
 	/**
