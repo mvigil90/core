@@ -441,7 +441,12 @@ class Cache {
 		$query = \OC_DB::prepare('UPDATE `*PREFIX*filecache` SET `path` = ?, `path_hash` = ?, `name` = ?, `parent` =?'
 			. ' WHERE `fileid` = ?');
 		$query->execute(array($target, md5($target), basename($target), $newParentId, $sourceId));
-		error_log("need queueFile move");
+		$parameters = array(
+			'fullStorage' => $this->fullStorageId,
+			'path' => $source,
+			'newPath' => $target
+		);
+		\OCP\Util::emitHook('Cache', 'post_move', $parameters);
 	}
 
 	/**
