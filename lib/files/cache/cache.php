@@ -402,7 +402,11 @@ class Cache {
 
 		$permissionsCache = new Permissions($this->storageId);
 		$permissionsCache->remove($entry['fileid']);
-		error_log("need queueFile remove/delete");
+		$parameters = array(
+			'fullStorage' => $this->fullStorageId,
+			'path' => $entry['path']
+		);
+		\OCP\Util::emitHook('Cache', 'post_delete', $parameters);
 	}
 
 	/**
