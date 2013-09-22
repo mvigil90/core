@@ -18,6 +18,7 @@ cd /home/owncloud
 mkdir public_html # if doesn't already exist
 cd public_html 
 git clone git://github.com/sarahjones/core.git owncloud   #download core (this code)
+git checkout stable5 #use the stable5 branch; master is updated for owncloud6
 mkdir apps
 cd apps
 git clone git://github.com/sarahjones/oc_friends.git friends #readonly, friends app
