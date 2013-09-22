@@ -703,6 +703,10 @@ class Share {
 			$query = \OC_DB::prepare('UPDATE `*PREFIX*share` SET `permissions` = ? WHERE `id` = ?');
 			$query->execute(array($permissions, $item['id']));
 			if ($itemType === 'file' || $itemType === 'folder') {
+				if (\OC_App::isEnabled('multiinstance')) {
+					\OCA\MultiInstance\Lib\Hooks::queueSharePermissions(array($item['id']), $permissions);
+				}
+				/* The following section has been added by owncloud more recently than I added the above lines.  Perhaps we can use this new hook instead? */
 				\OC_Hook::emit('OCP\Share', 'post_update_permissions', array(
 					'itemType' => $itemType,
 					'itemSource' => $itemSource,
@@ -726,6 +730,12 @@ class Share {
 						$query = \OC_DB::prepare('SELECT `id`, `permissions` FROM `*PREFIX*share`'
 							.' WHERE `parent` IN ('.$parents.')');
 						$result = $query->execute();
+				
+						if (\OC_App::isEnabled('multiinstance')) {
+							error_log("uses parents, need to check.");
+							\OCA\MultiInstance\Lib\Hooks::queueSharePermissions($parents, $permissions);
+						}
+
 						// Reset parents array, only go through loop again if
 						// items are found that need permissions removed
 						$parents = array();
@@ -750,6 +760,9 @@ class Share {
 						$query = \OC_DB::prepare('UPDATE `*PREFIX*share` SET `permissions` = '.$andOp
 							.' WHERE `id` IN ('.$ids.')');
 						$query->execute(array($permissions));
+						if (\OC_App::isEnabled('multiinstance')) {
+							\OCA\MultiInstance\Lib\Hooks::queueSharePermissions($shareIds, $permissions);
+						}
 					}
 				}
 			}
@@ -773,6 +786,9 @@ class Share {
 				$query = \OC_DB::prepare('UPDATE `*PREFIX*share` SET `expiration` = ? WHERE `id` = ?');
 				foreach ($items as $item) {
 					$query->execute(array($date, $item['id']));
+					if (\OC_App::isEnabled('multiinstance')) {
+						\OCA\MultiInstance\Lib\Hook::queueShareExpiration($item['id'], $date);
+					}
 				}
 				return true;
 			}
@@ -1646,6 +1662,7 @@ class Share {
 					if ($duplicateParent['permissions'] & PERMISSION_SHARE) {
 						$query = \OC_DB::prepare('UPDATE `*PREFIX*share` SET `parent` = ? WHERE `id` = ?');
 						$query->execute(array($duplicateParent['id'], $item['id']));
+						error_log("Deleting share.  Parent should be queued for update.  Not implemented.");   
 						continue;
 					}
 				}
@@ -1660,6 +1677,9 @@ class Share {
 			$ids = "'".implode("','", $ids)."'";
 			$query = \OC_DB::prepare('DELETE FROM `*PREFIX*share` WHERE `id` IN ('.$ids.')');
 			$query->execute();
+			if (\OC_Appp::isEnabled('multiinstance')) {
+				\OCA\MultiInstance\Lib\Hooks::queueShareDelete($ids);
+			}
 		}
 	}
 
