@@ -171,10 +171,6 @@ class OC_User {
 			throw new Exception('A valid password must be provided');
 		}
 
-		// Check if user already exists
-		if( self::userExistsForCreation($uid) ) {
-			throw new Exception('The username is already being used');
-		}
 		if (OC_App::isEnabled('multiinstance')) {
 			if (\OCA\MultiInstance\Lib\MILocation::uidContainsLocation($uid)){
 				$uid_location = $uid;
@@ -195,7 +191,7 @@ class OC_User {
 
 
 		$run = true;
-		OC_Hook::emit( "OC_User", "pre_createUser", array( "run" => &$run, "uid" => $location_uid, "password" => $password ));
+		OC_Hook::emit( "OC_User", "pre_createUser", array( "run" => &$run, "uid" => $uid_location, "password" => $password ));
 
 		if( $run ) {
 			//create the user in the first backend that supports creating users
@@ -203,8 +199,8 @@ class OC_User {
 				if(!$backend->implementsActions(OC_USER_BACKEND_CREATE_USER))
 					continue;
 
-				$backend->createUser($location_uid, $password);
-				OC_Hook::emit( "OC_User", "post_createUser", array( "uid" => $location_uid, "password" => $password ));
+				$backend->createUser($uid_location, $password);
+				OC_Hook::emit( "OC_User", "post_createUser", array( "uid" => $uid_location, "password" => $password ));
 
 				return self::userExists($location_uid);
 			}
