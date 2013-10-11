@@ -36,8 +36,22 @@ if($uid && $pass1 && $pass2) {
                 	$error[] = $exception->getMessage();
                 }
                 if(count($error) == 0) {
+			// User was successfully created and their name was modified with a location
+			if (OC_App::isEnabled('multiinstance')) {
+                        	if (\OCA\MultiInstance\Lib\MILocation::uidContainsLocation($uid)){
+                                	$uid_location = $uid;
+                        	}
+                        	else { //Always add for this location 
+                                	$location = \OCP\Config::getAppValue('multiinstance', 'location');
+                                	$uid_location = $uid . "@" . $location;
+                        	}
+                	}
+                	else {
+                        	$uid_location = $uid;
+                	}
 
-                                #OC_User::login($username, $password);
+
+                        OC_User::login($uid_location, $pass1);
 
                 }
 		else {
@@ -55,6 +69,6 @@ if($uid && $pass1 && $pass2) {
 
 	} else print "passwords do not match";
 } else print "invalid data";
-
+header("Location: http://triumph-server.cs.ucsb.edu/owncloud/index.php");
 exit;
 ?>

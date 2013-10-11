@@ -202,7 +202,7 @@ class OC_User {
 				$backend->createUser($uid_location, $password);
 				OC_Hook::emit( "OC_User", "post_createUser", array( "uid" => $uid_location, "password" => $password ));
 
-				return self::userExists($location_uid);
+				return self::userExists($uid_location);
 			}
 		}
 		return false;
