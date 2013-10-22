@@ -69,6 +69,6 @@ if($uid && $pass1 && $pass2) {
 
 	} else print "passwords do not match";
 } else print "invalid data";
-header("Location: http://triumph-server.cs.ucsb.edu/owncloud/index.php");
+//header("Location: http://triumph-server.cs.ucsb.edu/owncloud/index.php");
 exit;
 ?>
