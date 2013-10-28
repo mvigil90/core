@@ -258,9 +258,13 @@ class OC_User {
 		$run = true;
 		OC_Hook::emit( "OC_User", "pre_login", array( "run" => &$run, "uid" => $uid ));
 
-		if (OC_App::isEnabled('multiinstance') && !$user) {
-			\OCA\MultiInstance\Lib\MILocation::fetchUserFromCentralServer($uid);
-		}
+                if (OC_App::isEnabled('multiinstance')) {
+                        if (!self::userExists($uid)) {
+                                \OCA\MultiInstance\Lib\MILocation::fetchUserFromCentralServer($uid);
+                                return false;
+                        }
+                }
+
 
 		if( $run ) {
 			$uid = self::checkPassword( $uid, $password );
