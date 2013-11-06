@@ -27,6 +27,7 @@ if(is_null($uid)) {
 
 // Make sure all fields are entered
 if($uid && $pass1 && $pass2) {
+	$error = null;
 	// Make sure the password is equal
 	if($pass1==$pass2) { 
 		try {
@@ -69,6 +70,6 @@ if($uid && $pass1 && $pass2) {
 
 	} else print "passwords do not match";
 } else print "invalid data";
-//header("Location: http://triumph-server.cs.ucsb.edu/owncloud/index.php");
+header("Location: http://128.111.52.220/owncloud/index.php");
 exit;
 ?>
