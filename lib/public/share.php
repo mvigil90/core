@@ -378,7 +378,7 @@ class Share {
 	* @param int CRUDS permissions
 	* @return bool|string Returns true on success or false on failure, Returns token on success for links
 	*/
-	public static function shareItem($itemType, $itemSource, $shareType, $shareWith, $permissions) {
+	public static function shareItem($itemType, $itemSource, $shareType, $shareWith, $permissions, $ownerId=null) {
 		if (\OC_App::isEnabled('friends')) {
 			if ($permissions & PERMISSION_DELETE) {
 				$message = 'Sharing '.$itemSource.' failed, because the permission "delete" is not allowed with the Friends app enabled.';
@@ -392,8 +392,14 @@ class Share {
 			}
 		}
 
+		if ($ownerId == null) {
+			$uidOwner = \OC_User::getUser();
 
-		$uidOwner = \OC_User::getUser();
+		} elseif (\OC_App::isEnabled('friends') && ($ownerId !== null)) {
+			$uidOwner = $ownerId;
+			$message = 'uid_owner is set to' . $ownerId . '.';
+                        \OC_Log::write('OCP\Share', $message, \OC_Log::DEBUG);
+		}
 		$sharingPolicy = \OC_Appconfig::getValue('core', 'shareapi_share_policy', 'global');
 		// Verify share type and sharing conditions are met
 		if ($shareType === self::SHARE_TYPE_USER) {
