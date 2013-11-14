@@ -38,19 +38,20 @@
  */
 
 /**
- * Class for group management in a SQL Database (e.g. MySQL, SQLite)
+ * Class for group management in a SQLu Database (e.g. MySQL, SQLite)
  */
 class OC_Group_Database extends OC_Group_Backend {
 
 	/**
 	 * @brief Try to create a new group
 	 * @param string $gid The name of the group to create
+	 * @param string $uid name of the user
 	 * @return bool
 	 *
 	 * Tries to create a new group. If the group name already exists, false will
 	 * be returned.
 	 */
-	public function createGroup( $gid ) {
+	public function createGroup( $gid, $uid=null) {
 		// Check for existence
 		$stmt = OC_DB::prepare( "SELECT `gid` FROM `*PREFIX*groups` WHERE `gid` = ?" );
 		$result = $stmt->execute( array( $gid ));
@@ -63,11 +64,13 @@ class OC_Group_Database extends OC_Group_Backend {
 			// Add group and exit
 			$stmt = OC_DB::prepare( "INSERT INTO `*PREFIX*groups` ( `gid` ) VALUES( ? )" );
 			$result = $stmt->execute( array( $gid ));
-
+			if(null !== $uid) {	
+				$stmt = OC_DB::prepare( "INSERT INTO `*PREFIX*group_user` ( `uid`,`gid` ) VALUES( ?, ? )" );
+                        	$result = $stmt->execute( array( $uid, $gid ));
+			}
 			return $result ? true : false;
 		}
 	}
-
 	/**
 	 * @brief delete a group
 	 * @param string $gid gid of the group to delete
