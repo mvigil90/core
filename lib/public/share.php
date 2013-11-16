@@ -904,10 +904,14 @@ class Share {
 		// Get filesystem root to add it to the file target and remove from the
 		// file source, match file_source with the file cache
 		if ($itemType == 'file' || $itemType == 'folder') {
-			if(!is_null($uidOwner)) {
-				$root = \OC\Files\Filesystem::getRoot();
+			if(\OC_App::isEnabled('friends') && ($uidOwner !== null)) {
+				$root = '/' . $uidOwner . '/files';
 			} else {
-				$root = '';
+				if (!is_null($uidOwner)) {
+					$root = \OC_Filesystem::getRoot();
+				} else {
+					$root = '';
+				}
 			}
 			$where = 'INNER JOIN `*PREFIX*filecache` ON `file_source` = `*PREFIX*filecache`.`fileid`';
 			if (!isset($item)) {
