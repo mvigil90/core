@@ -70,6 +70,6 @@ if($uid && $pass1 && $pass2) {
 
 	} else print "passwords do not match";
 } else print "invalid data";
-header("Location: http://128.111.52.220/owncloud/index.php");
+header("Location: http://"  . \OCP\Config::getAppValue('multiinstance', 'ip') . "/owncloud/index.php");
 exit;
 ?>
