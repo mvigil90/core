@@ -298,6 +298,22 @@ class Share {
 	}
 
 	/**
+	 * @brief Get the Share.id with the uid_owner, share_with, and item_source.
+	 * This is to support global sharing with multiinstance App.
+	 *
+	 **/
+	public static function getShareId($uidOwner, $shareWith, $fileTarget) {
+		$query = \OC_DB::prepare('SELECT id as share_id FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `share_with` = ? AND `file_target` = ?',1);
+                $query_result = $query->execute(array($uidOwner, $shareWith, $fileTarget)); 
+                if (\OC_DB::isError($query_result)) {
+                        \OC_Log::write('OCP\Share', \OC_DB::getErrorMessage($result) . ', uid_owner=' . $uidOWner . ', share_with=' . $shareWith . ',  file_target=' . $fileTarget, \OC_Log::ERROR);
+                }
+                $row =  $query_result->fetchRow();
+                $shareId = $row['share_id'];
+                return $shareId;
+	}
+
+	/**
 	 * @brief resolves reshares down to the last real share
 	 * @param $linkItem
 	 * @return $fileOwner
