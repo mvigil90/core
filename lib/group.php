@@ -66,7 +66,7 @@ class OC_Group {
 	 * Tries to create a new group. If the group name already exists, false will
 	 * be returned. Basic checking of Group name
 	 */
-	public static function createGroup( $gid ) {
+	public static function createGroup( $gid , $uid=null) {
 		// No empty group names!
 		if( !$gid ) {
 			return false;
@@ -77,7 +77,7 @@ class OC_Group {
 		}
 
 		$run = true;
-		OC_Hook::emit( "OC_Group", "pre_createGroup", array( "run" => &$run, "gid" => $gid ));
+		OC_Hook::emit( "OC_Group", "pre_createGroup", array( "run" => &$run, "gid" => $gid , "uid" => $uid));
 
 		if($run) {
 			//create the group in the first backend that supports creating groups
@@ -85,8 +85,8 @@ class OC_Group {
 				if(!$backend->implementsActions(OC_GROUP_BACKEND_CREATE_GROUP))
 					continue;
 
-				$backend->createGroup($gid);
-				OC_Hook::emit( "OC_User", "post_createGroup", array( "gid" => $gid ));
+				$backend->createGroup($gid, $uid);
+				OC_Hook::emit( "OC_User", "post_createGroup", array( "gid" => $gid, "uid" => $uid ));
 
 				return true;
 			}
