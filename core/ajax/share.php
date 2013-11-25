@@ -178,7 +178,9 @@ if (isset($_POST['action']) && isset($_POST['itemType']) && isset($_POST['itemSo
 // 				}
 				$groups = OC_Group::getGroups($_GET['search']);
 				if (\OC_App::isEnabled('friends')) {
-					$groups = array();
+					//$groups = array();
+					$usergroups = OC_Group::getUserGroups(OC_User::getUser());
+                                        $groups = array_intersect($groups, $usergroups);
 				}
 				else if ($sharePolicy == 'groups_only') {
 					$usergroups = OC_Group::getUserGroups(OC_User::getUser());
@@ -192,6 +194,8 @@ if (isset($_POST['action']) && isset($_POST['itemType']) && isset($_POST['itemSo
 					$limit = 15 - $count;
 					if (\OC_App::isEnabled('friends')) {
 						$users = \OCA\Friends\Lib\Friends::getDisplayNames(OC_User::getUser(), $_GET['search'], $limit, $offset); 
+						$group_arr = OC_Group::DisplayNamesInGroups($groups, $_GET['search'], $limit, $offset);
+						$users = array_merge($users, $group_arr);
 					}
 					else if ($sharePolicy == 'groups_only') {
 						$users = OC_Group::DisplayNamesInGroups($groups, $_GET['search'], $limit, $offset);

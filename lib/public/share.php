@@ -456,11 +456,11 @@ class Share {
 				}
 			}
 		} else if ($shareType === self::SHARE_TYPE_GROUP) {
-			if (\OC_App::isEnabled('friends')) {
-				$message = 'Sharing '.$itemSource.' failed, because group sharing is not allowed when the Friends app is enabled.';
-				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
-				throw new \Exception($message);
-			}
+			//if (\OC_App::isEnabled('friends')) {
+			//	$message = 'Sharing '.$itemSource.' failed, because group sharing is not allowed when the Friends app is enabled.';
+			//	\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
+			//	throw new \Exception($message);
+			//}
 			if (!\OC_Group::groupExists($shareWith)) {
 				$message = 'Sharing '.$itemSource.' failed, because the group '.$shareWith.' does not exist';
 				\OC_Log::write('OCP\Share', $message, \OC_Log::ERROR);
