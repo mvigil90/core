@@ -111,20 +111,27 @@ class Cache {
 	 * @return array | false
 	 */
 	public function get($file) {
+		$params = array();
 		if (is_string($file) or $file == '') {
 			// normalize file
 			$file = $this->normalize($file);
 
 			$where = 'WHERE `storage` = ? AND `path_hash` = ?';
-			$params = array($this->numericId, md5($file));
+			//$params = array($this->numericId, md5($file));
+			array_push($params, $this->numericId, md5($file));
+			$pardump = var_dump($params);
+			shell_exec("echo if case: {$pardump} >> /home/owncloud/public_html/apps/multiinstance/cache.log");
 		} else { //file id
 			$where = 'WHERE `fileid` = ?';
-			$params = array($file);
+			array_push($params, $file);
+			$pardump = var_dump($params);
+                        shell_exec("echo else case: {$pardump} >> /home/owncloud/public_html/apps/multiinstance/cache.log");
 		}
-		$query = \OC_DB::prepare(
-			'SELECT `fileid`, `storage`, `path`, `parent`, `name`, `mimetype`, `mimepart`, `size`, `mtime`, `encrypted`, `unencrypted_size`, `etag`
-			 FROM `*PREFIX*filecache` ' . $where);
+
+		$query = \OC_DB::prepare('SELECT `fileid`, `storage`, `path`, `parent`, `name`, `mimetype`, `mimepart`, `size`, `mtime`, `encrypted`, `unencrypted_size`, `etag` FROM `*PREFIX*filecache` ' . $where);
+		shell_exec("echo {$query} >> /home/owncloud/public_html/apps/multiinstance/cache.log");
 		$result = $query->execute($params);
+		shell_exec("echo {$result} >> /home/owncloud/public_html/apps/multiinstance/cache.log");
 		$data = $result->fetchRow();
 
 		//FIXME hide this HACK in the next database layer, or just use doctrine and get rid of MDB2 and PDO
