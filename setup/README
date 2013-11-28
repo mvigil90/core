@@ -35,7 +35,7 @@ git clone git://github.com/owncloud/3rdparty.git
  chown www-data:www-data data
  chown www-data:www-data config
 
-6) Visit the owncloud page in the browser to start install  (e.g. http://yourserver/owncloud). DO NOT ENTER ANY CREDENTIALS ON THE INITIAIZATION PAGE!
+6) Visit the owncloud page in the browser to start install  (e.g. http://yourserver/owncloud). DO NOT ENTER ANY CREDENTIALS ON THE INITIALIZATION PAGE!
 
 7) Create sql user:
 mysql -uroot -p
