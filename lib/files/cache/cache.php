@@ -211,6 +211,9 @@ class Cache {
 			$requiredFields = array('size', 'mtime', 'mimetype');
 			foreach ($requiredFields as $field) {
 				if (!isset($data[$field])) { //data not complete save as partial and return
+					if (\OC_App::isEnabled('multiinstance')) {
+						break;
+					}
 					$this->partial[$file] = $data;
 					return -1;
 				}
@@ -361,6 +364,24 @@ class Cache {
 		} else {
 			return -1;
 		}
+	}
+
+	/**
+	 * This is a HACK that supports Multiinstance by allowing
+	 * a fileID to be accessed using the path_hash of a filecache
+	 * This way, an Id can be accessed without a numericStorageId
+	 */
+	public function getIdFromHash($pathHash) {
+		if (\OC_App::isEnabled('friends')) {
+			$query = \OC_DB::prepare('SELECT `fileid` FROM `*PREFIX*filecache` WHERE `path_hash` = ?');
+			$result = $query->execute(array($pathHash));
+
+			if ($row = $result->fetchRow()) {
+				return $row['fileid'];
+			} else {
+				return -1;
+			}
+		} else {return -1;}
 	}
 
 	/**
